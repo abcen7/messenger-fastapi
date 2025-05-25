@@ -1,0 +1,4 @@
+ACCESS_TOKEN_TYPE = "access"
+TOKEN_TYPE_FIELD = "type"
+REFRESH_TOKEN_TYPE = "refresh"
+BEARER_TOKEN_TYPE = "Bearer"
