@@ -1,4 +1,5 @@
-__all__ = ("Base", "with_async_session", "load_models")
+__all__ = ("Base", "with_async_session")
 
-from .base import Base
-from .engine import load_models, with_async_session
+from app.models.base import Base
+
+from .engine import with_async_session

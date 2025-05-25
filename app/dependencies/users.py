@@ -38,6 +38,7 @@ async def get_user_by_token_sub(
     )
 
 
+# TODO: move to dependencies/auth.py
 def validate_token_type(
     payload: dict,
     token_type: str,

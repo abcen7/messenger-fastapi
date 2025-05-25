@@ -37,9 +37,6 @@ def with_async_session(func):
             return await func(*args, **kwargs)
         async for session in get_async_session():
             return await func(*args, session=session, **kwargs)
+        return None
 
     return wrapper
-
-
-def load_models():
-    from app.users.models import User

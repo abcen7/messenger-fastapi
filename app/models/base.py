@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Optional
 
-from sqlalchemy import DateTime, Integer, func
+from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 
@@ -13,10 +13,12 @@ class Base(DeclarativeBase):
         # TODO: change it to https://github.com/Netflix/dispatch/blob/master/src/dispatch/database/core.py#L51
         return f"{cls.__name__.lower()}"
 
-    id: Mapped[int] = mapped_column(Integer(), primary_key=True, autoincrement=True)
     created_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(), default=func.now()
+        server_default=func.now(),
+        default=datetime.now(UTC),
     )
     updated_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(), default=func.now(), onupdate=func.now()
+        server_default=func.now(),
+        default=datetime.now(UTC),
+        onupdate=func.now(),
     )

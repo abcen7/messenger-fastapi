@@ -3,7 +3,8 @@ from typing import Sequence
 from fastapi import HTTPException
 from starlette import status
 
-from ..auth.utils import AuthHelper
+from app.auth.utils import AuthHelper
+
 from .models import User
 from .repositories import UsersRepository
 from .schemas import UserCreate, UserInDB, UserLogin

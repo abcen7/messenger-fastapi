@@ -5,9 +5,8 @@ from starlette import status
 
 from app.auth.schemas import TokenPair
 from app.auth.utils import AuthHelper
-from app.users.dependencies import get_current_auth_user_for_refresh, validate_auth_user
-from app.users.schemas import UserCreate, UserLogin, UserSchema
-from app.users.services import UsersService
+from app.dependencies.users import get_current_auth_user_for_refresh, validate_auth_user
+from app.schemas.users import UserSchema
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

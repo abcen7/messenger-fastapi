@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from starlette import status
 
-from app.users.dependencies import get_current_auth_user
-from app.users.schemas import UserCreate, UserSchema
-from app.users.services import UsersService
+from app.dependencies.users import get_current_auth_user
+from app.schemas.users import UserCreate, UserSchema
+from app.services.users import UsersService
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
