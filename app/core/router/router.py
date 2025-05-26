@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 
-from app.api.rest.v1 import auth_router, users_router
+from app.api.rest.v1 import auth_router, messages_router, users_router
 
 api_router = APIRouter(prefix="/api/v1")
 
 INCLUDED_ROUTERS = [
     users_router,
     auth_router,
+    messages_router,
 ]
 
 for ROUTER in INCLUDED_ROUTERS:

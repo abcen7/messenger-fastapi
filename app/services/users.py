@@ -13,7 +13,6 @@ class UsersService:
     repository = UsersRepository()
 
     async def create(self, user: UserCreate) -> None:
-        print(user)
         if await self.repository.get_one_by_email(user.email) is not None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
