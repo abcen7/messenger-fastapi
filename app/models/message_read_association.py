@@ -22,6 +22,5 @@ class MessagesRead(Base):
         onupdate=func.now(),
     )
 
-    # Связи
     messages: Mapped["Messages"] = relationship(back_populates="reads")
     users: Mapped["User"] = relationship(back_populates="messages_read")

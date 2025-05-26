@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import String
+from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
@@ -20,8 +20,9 @@ class Chats(Base):
     __tablename__ = "chats"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-    type: Mapped[ChatType]
+    title: Mapped[str] = mapped_column(String(255))
+    type: Mapped[ChatType] = mapped_column(Enum(ChatType))
+
     groups: Mapped["Groups"] = relationship(
         back_populates="groups_details",
     )
@@ -30,3 +31,9 @@ class Chats(Base):
         back_populates="chat",
         cascade="all, delete-orphan",
     )
+
+    __mapper_args__ = {
+        "polymorphic_on": type,
+        "polymorphic_identity": ChatType.PRIVATE,
+        "with_polymorphic": "*",
+    }
