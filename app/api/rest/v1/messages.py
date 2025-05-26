@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends
 from starlette import status
 
 from app.dependencies.messages import ensure_user_is_member
-from app.dependencies.users import get_current_auth_user
 from app.services.messages import MessagesService
 
 router = APIRouter(prefix="/messages", tags=["Messages"])
