@@ -27,7 +27,8 @@ async def validate_auth_user(
 
 
 async def get_user_by_token_sub(
-    payload: dict, users_repository: UsersRepository
+    payload: dict,
+    users_repository: UsersRepository,
 ) -> UserSchema:
     print(payload)
     if user := await users_repository.get_one(int(payload.get("sub"))):

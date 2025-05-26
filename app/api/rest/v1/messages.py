@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from starlette import status
 
+from app.dependencies.messages import ensure_user_is_member
 from app.dependencies.users import get_current_auth_user
 from app.services.messages import MessagesService
 
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/messages", tags=["Messages"])
 @router.get(
     "/history/{chat_id}",
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(get_current_auth_user)],
+    dependencies=[Depends(ensure_user_is_member)],
 )
 async def get_history_messages(
     messages_service: Annotated[MessagesService, Depends()],
