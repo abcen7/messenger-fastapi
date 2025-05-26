@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.chats import Chats, ChatType
 
 if TYPE_CHECKING:
-    from app.models import GroupUserAssociation, Users
+    from app.models import Users
 
 
 class Groups(Chats):
@@ -15,7 +15,6 @@ class Groups(Chats):
     id: Mapped[int] = mapped_column(ForeignKey("chats.id"), primary_key=True)
     creator_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    chat: Mapped["Chats"] = relationship(back_populates="groups")
     creator: Mapped["Users"] = relationship(back_populates="groups_created")
 
     __mapper_args__ = {

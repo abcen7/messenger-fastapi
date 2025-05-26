@@ -7,8 +7,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 
 if TYPE_CHECKING:
-    from .groups import Groups
+    from .chat_member_association import ChatMember
     from .messages import Messages
+    from .users import Users
 
 
 class ChatType(StrEnum):
@@ -23,8 +24,8 @@ class Chats(Base):
     title: Mapped[str] = mapped_column(String(255))
     type: Mapped[ChatType] = mapped_column(Enum(ChatType))
 
-    groups: Mapped["Groups"] = relationship(
-        "Groups",
+    members: Mapped[list["ChatMember"]] = relationship(
+        "ChatMember",
         back_populates="chat",
         cascade="all, delete-orphan",
     )
@@ -32,6 +33,11 @@ class Chats(Base):
         "Messages",
         back_populates="chat",
         cascade="all, delete-orphan",
+    )
+    users: Mapped[list["Users"]] = relationship(
+        "Users",
+        secondary="chat_members",
+        back_populates="chats",
     )
 
     __mapper_args__ = {
