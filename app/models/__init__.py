@@ -1,6 +1,5 @@
 __all__ = (
     "Chats",
-    "GroupUserAssociation",
     "Groups",
     "Messages",
     "Users",
@@ -8,7 +7,6 @@ __all__ = (
 )
 
 from .chats import Chats
-from .group_user_association import GroupUserAssociation
 from .groups import Groups
 from .message_read_association import MessagesRead
 from .messages import Messages

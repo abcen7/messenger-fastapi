@@ -26,6 +26,6 @@ class Users(Base):
     messages_read: Mapped[list["MessagesRead"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
-    group_details: Mapped[list["GroupUserAssociation"]] = relationship(
-        back_populates="user",
-    )
+    # group_details: Mapped[list["GroupUserAssociation"]] = relationship(
+    #     back_populates="user",
+    # )
