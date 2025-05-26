@@ -1,20 +1,16 @@
 from typing import Sequence
 
-from sqlalchemy import Row, RowMapping, select
+from sqlalchemy import Row, RowMapping, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import with_async_session
-from app.models import Messages
-from app.schemas.messages import MessageCreate
+from app.models import Messages, MessagesRead
+from app.schemas.messages import MessageCreate, ReadMessage
 
 
 class MessagesRepository:
     @with_async_session
-    async def get_all(
-        self,
-        chat_id: int,
-        session: AsyncSession,
-    ) -> Sequence[Messages]:
+    async def get_all(self, chat_id: int, session: AsyncSession) -> Sequence[Messages]:
         query = await session.execute(
             select(Messages)
             .where(Messages.chat_id == chat_id)
@@ -23,10 +19,11 @@ class MessagesRepository:
         return query.scalars().all()
 
     @with_async_session
-    async def create(
-        self,
-        message: MessageCreate,
-        session: AsyncSession,
-    ) -> None:
+    async def create(self, message: MessageCreate, session: AsyncSession) -> None:
+        session.add(message)
+        await session.commit()
+
+    @with_async_session
+    async def read_message(self, message: ReadMessage, session: AsyncSession) -> None:
         session.add(message)
         await session.commit()
