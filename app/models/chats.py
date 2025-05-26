@@ -38,6 +38,7 @@ class Chats(Base):
         "Users",
         secondary="chat_members",
         back_populates="chats",
+        viewonly=True,
     )
 
     __mapper_args__ = {

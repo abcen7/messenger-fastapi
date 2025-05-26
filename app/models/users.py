@@ -26,6 +26,7 @@ class Users(Base):
         "Chats",
         secondary="chat_members",
         back_populates="users",
+        viewonly=True,
     )
     groups_created: Mapped[list["Groups"]] = relationship(
         back_populates="creator",
@@ -39,6 +40,3 @@ class Users(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
-    # group_details: Mapped[list["GroupUserAssociation"]] = relationship(
-    #     back_populates="user",
-    # )

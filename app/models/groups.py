@@ -20,7 +20,3 @@ class Groups(Chats):
     __mapper_args__ = {
         "polymorphic_identity": ChatType.GROUP,
     }
-    # # association between Parent -> Association -> Child
-    # user_details: Mapped[list["GroupUserAssociation"]] = relationship(
-    #     back_populates="group",
-    # )
