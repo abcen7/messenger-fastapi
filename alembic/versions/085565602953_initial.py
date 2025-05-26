@@ -1,8 +1,8 @@
-"""initial migration
+"""initial
 
-Revision ID: 1a7da0bf24d6
+Revision ID: 085565602953
 Revises:
-Create Date: 2025-05-26 01:59:54.424767
+Create Date: 2025-05-26 10:26:54.897403
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "1a7da0bf24d6"
+revision: str = "085565602953"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -33,7 +33,6 @@ def upgrade() -> None:
             "updated_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("title"),
     )
     op.create_table(
         "users",
@@ -53,14 +52,7 @@ def upgrade() -> None:
     op.create_table(
         "groups",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("title", sa.String(length=255), nullable=False),
         sa.Column("creator_id", sa.Integer(), nullable=False),
-        sa.Column(
-            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True
-        ),
-        sa.Column(
-            "updated_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True
-        ),
         sa.ForeignKeyConstraint(
             ["creator_id"],
             ["users.id"],
@@ -70,15 +62,13 @@ def upgrade() -> None:
             ["chats.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("title"),
     )
     op.create_table(
         "messages",
-        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("chat_id", sa.Integer(), nullable=False),
         sa.Column("sender_id", sa.Integer(), nullable=False),
         sa.Column("text", sa.Text(), nullable=False),
-        sa.Column("read", sa.Boolean(), nullable=False),
         sa.Column(
             "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True
         ),
