@@ -8,7 +8,7 @@ from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Messages
-    from app.schemas.users import User
+    from app.models.users import Users
 
 
 class MessagesRead(Base):
@@ -23,4 +23,4 @@ class MessagesRead(Base):
     )
 
     messages: Mapped["Messages"] = relationship(back_populates="reads")
-    users: Mapped["User"] = relationship(back_populates="messages_read")
+    user: Mapped["Users"] = relationship(back_populates="messages_read")

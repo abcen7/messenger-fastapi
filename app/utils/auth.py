@@ -10,11 +10,10 @@ from fastapi.security import (
 )
 from jwt import InvalidTokenError
 from passlib.context import CryptContext
-from pydantic import EmailStr
 from starlette import status
 
-from app.auth.schemas import AccessTokenPayload, RefreshTokenPayload, TokenPayload
 from app.core.config import settings
+from app.schemas.auth import AccessTokenPayload, RefreshTokenPayload
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

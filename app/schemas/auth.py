@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from app.utils.constants import ACCESS_TOKEN_TYPE, BEARER_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 

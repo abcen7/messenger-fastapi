@@ -4,6 +4,7 @@ __all__ = (
     "Groups",
     "Messages",
     "Users",
+    "MessagesRead",
 )
 
 from .chats import Chats

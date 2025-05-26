@@ -8,7 +8,7 @@ from app.core.router import api_router
 
 load_dotenv()
 
-app: FastAPI = create_default_fastapi_app(title="FastAPI JWT")
+app: FastAPI = create_default_fastapi_app(title="FastAPI Messenger API")
 
 app.include_router(api_router)
 

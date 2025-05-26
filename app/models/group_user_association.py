@@ -26,9 +26,9 @@ class GroupUserAssociation(Base):
 
     # association between Association -> User
     user: Mapped["Users"] = relationship(
-        back_populates="users_details",
+        back_populates="group_details",
     )
     # association between Association -> Group
     group: Mapped["Groups"] = relationship(
-        back_populates="groups_details",
+        back_populates="user_details",
     )

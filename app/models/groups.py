@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.chats import Chats, ChatType
 
 if TYPE_CHECKING:
-    from app.models import Users
+    from app.models import GroupUserAssociation, Users
 
 
 class Groups(Chats):
@@ -16,16 +16,12 @@ class Groups(Chats):
     creator_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     chat: Mapped["Chats"] = relationship(back_populates="groups")
-    creator: Mapped["Users"] = relationship(back_populates="groups")
-    members: Mapped[list["Users"]] = relationship(
-        secondary="group_user_association",
-        back_populates="groups",
-    )
+    creator: Mapped["Users"] = relationship(back_populates="groups_created")
 
     __mapper_args__ = {
         "polymorphic_identity": ChatType.GROUP,
     }
     # association between Parent -> Association -> Child
-    # users_details: Mapped[list["GroupUserAssociation"]] = relationship(
-    #     back_populates="groups",
-    # )
+    user_details: Mapped[list["GroupUserAssociation"]] = relationship(
+        back_populates="group",
+    )

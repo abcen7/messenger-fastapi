@@ -20,7 +20,7 @@ class Messages(Base):
     text: Mapped[str] = mapped_column(Text)
 
     chat: Mapped["Chats"] = relationship("Chats", back_populates="messages")
-    sender: Mapped["Users"] = relationship("Users", back_populates="messages")
+    sender: Mapped["Users"] = relationship("Users", back_populates="messages_sent")
     reads: Mapped[list["MessagesRead"]] = relationship(
         back_populates="messages",
         cascade="all, delete-orphan",

@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from starlette import status
 
-from app.auth.schemas import TokenPair
-from app.auth.utils import AuthHelper
 from app.dependencies.users import get_current_auth_user_for_refresh, validate_auth_user
+from app.schemas.auth import TokenPair
 from app.schemas.users import UserSchema
+from app.utils.auth import AuthHelper
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

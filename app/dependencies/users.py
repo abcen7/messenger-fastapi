@@ -2,10 +2,10 @@ from fastapi import HTTPException
 from fastapi.params import Depends
 from starlette import status
 
-from app.auth.schemas import TokenPayload
-from app.auth.utils import AuthHelper
-from app.users.repositories import UsersRepository
-from app.users.schemas import UserLogin, UserSchema
+from app.repositories.users import UsersRepository
+from app.schemas.auth import TokenPayload
+from app.schemas.users import UserLogin, UserSchema
+from app.utils.auth import AuthHelper
 from app.utils.constants import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FIELD
 
 

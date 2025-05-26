@@ -2,11 +2,8 @@ from pydantic import BaseModel, EmailStr
 
 
 class User(BaseModel):
-    username: str  # another unique field
-    first_name: str
-    last_name: str
     email: EmailStr  # field
-    phone_number: str  # useless field
+    full_name: str
 
 
 class UserSchema(User):

@@ -24,7 +24,9 @@ class Chats(Base):
     type: Mapped[ChatType] = mapped_column(Enum(ChatType))
 
     groups: Mapped["Groups"] = relationship(
-        back_populates="groups_details",
+        "Groups",
+        back_populates="chat",
+        cascade="all, delete-orphan",
     )
     messages: Mapped[list["Messages"]] = relationship(
         "Messages",

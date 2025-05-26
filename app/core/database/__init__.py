@@ -1,5 +1,3 @@
-__all__ = ("Base", "with_async_session")
-
-from app.models.base import Base
+__all__ = "with_async_session"
 
 from .engine import with_async_session
