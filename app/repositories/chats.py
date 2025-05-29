@@ -23,3 +23,7 @@ class ChatsRepository:
             )
         )
         return query.scalar_one_or_none() is not None
+
+    @with_async_session
+    async def create(self):
+        pass
