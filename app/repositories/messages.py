@@ -4,8 +4,8 @@ from sqlalchemy import Row, RowMapping, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import with_async_session
-from app.models import Messages, MessagesRead
-from app.schemas.messages import MessageCreate, ReadMessage
+from app.models import Messages
+from app.schemas.messages import MessageCreate
 
 
 class MessagesRepository:
@@ -20,10 +20,5 @@ class MessagesRepository:
 
     @with_async_session
     async def create(self, message: MessageCreate, session: AsyncSession) -> None:
-        session.add(message)
-        await session.commit()
-
-    @with_async_session
-    async def read_message(self, message: ReadMessage, session: AsyncSession) -> None:
         session.add(message)
         await session.commit()
