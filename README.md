@@ -25,3 +25,5 @@ USER FLOWS:
    3) Create `N` rows in table db `chat_members` params:
         - `chat_id: int` (Created chat)
         - `user_ids: int` (The ids of person he wants to communicate with)
+
+Create the base realization of repository from Kirill's service with generics
