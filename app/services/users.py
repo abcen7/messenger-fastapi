@@ -13,6 +13,8 @@ class UsersService:
     repository = UsersRepository()
 
     async def create(self, user: UserCreate) -> None:
+        # TODO: fix get_one_or_none here with condition
+        print(await self.repository.get_one(self.repository.model.email == user.email))
         if (
             await self.repository.get_one(self.repository.model.email == user.email)
             is not None
