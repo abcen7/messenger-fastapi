@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Depends, WebSocket, WebSocketException
 from starlette import status
 
@@ -10,7 +12,7 @@ from app.utils.constants import ACCESS_TOKEN_TYPE, BEARER_TOKEN_TYPE
 
 async def get_current_websocket_auth_user(
     websocket: WebSocket,
-    users_repository: UsersRepository = Depends(UsersRepository),
+    users_repository: Annotated[UsersRepository, Depends()],
 ) -> UserSchema:
     # get auth header
     auth_header = websocket.headers.get("Authorization")

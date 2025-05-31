@@ -1,9 +1,10 @@
+from typing import Annotated
+
 from fastapi import HTTPException
 from fastapi.params import Depends
 from starlette import status
 
 from app.repositories.users import UsersRepository
-from app.schemas.auth import TokenPayload
 from app.schemas.users import UserLogin, UserSchema
 from app.utils.auth import AuthHelper
 from app.utils.constants import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FIELD
@@ -11,9 +12,13 @@ from app.utils.constants import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYP
 
 async def validate_auth_user(
     user_login: UserLogin,
-    users_repository: UsersRepository = Depends(UsersRepository),
+    users_repository: Annotated[UsersRepository, Depends()],
 ) -> UserSchema:
-    if (user := await users_repository.get_one_by_email(user_login.email)) is None:
+    if (
+        user := await users_repository.get_one(
+            users_repository.model.email == user_login.email
+        )
+    ) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
@@ -30,8 +35,7 @@ async def get_user_by_token_sub(
     payload: dict,
     users_repository: UsersRepository,
 ) -> UserSchema:
-    print(payload)
-    if user := await users_repository.get_one(int(payload.get("sub"))):
+    if user := await users_repository.get_one_or_none(int(payload.get("sub"))):
         return UserSchema.model_validate(user, from_attributes=True)
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -59,8 +63,8 @@ class UserGetterFromToken:
 
     async def __call__(
         self,
-        payload: dict = Depends(AuthHelper.get_current_token_payload),
-        users_repository: UsersRepository = Depends(UsersRepository),
+        payload: Annotated[dict, Depends(AuthHelper.get_current_token_payload)],
+        users_repository: Annotated[UsersRepository, Depends()],
     ) -> UserSchema:
         validate_token_type(payload, self.token_type)
         return await get_user_by_token_sub(payload, users_repository)

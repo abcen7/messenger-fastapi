@@ -1,6 +1,5 @@
 from typing import Generic, TypeVar, get_args
 
-from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,10 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import with_async_session
 from app.models.base import Base
 
-T = TypeVar("T")
+SAModel = TypeVar("SAModel")
 
 
-class BaseRepository(Generic[T]):
+class BaseRepository(Generic[SAModel]):
     model: Base
 
     @with_async_session
@@ -21,12 +20,12 @@ class BaseRepository(Generic[T]):
     def __init_subclass__(cls):
         cls.model = get_args(cls.__orig_bases__[0])[0]
 
-    async def get_one_by_id(
+    async def get_one(
         self,
         id_: int,
         *where,
         **filter_by,
-    ) -> T | None:
+    ) -> SAModel | None:
         return await self.get_one_or_none(id_, *where, **filter_by)
 
     async def get_one_or_none(
@@ -34,7 +33,7 @@ class BaseRepository(Generic[T]):
         id_: int,
         *where,
         **filter_by,
-    ) -> T | None:
+    ) -> SAModel | None:
         return await self.session.scalar(
             select(self.model)
             .filter_by(
@@ -63,37 +62,35 @@ class BaseRepository(Generic[T]):
     #     )
     #     return instance_set.unique().all(), await self.count(*where)
 
-    async def select_all(self, *where, **filter_by) -> list[T]:
+    async def select_all(self, *where, **filter_by) -> list[SAModel]:
         instance_set = await self.session.scalars(
             select(self.model).filter_by(deleted_at=None, **filter_by).where(*where),
         )
         return instance_set.unique().all()
 
-    async def create(self, dto: BaseModel) -> T:
+    async def create(self, dto: BaseModel) -> SAModel:
         instance = self.model(**dto.model_dump())
         self.session.add(instance)
         await self.session.commit()
 
         return instance
 
-    async def create_many(self, dto_set: list[BaseModel]) -> list[T]:
+    async def create_many(self, dto_set: list[BaseModel]) -> list[SAModel]:
         instance_set = [self.model(**dto.model_dump()) for dto in dto_set]
         self.session.add_all(instance_set)
         await self.session.commit()
 
         return instance_set
 
-    async def update(self, id_: int, **values) -> T:
+    async def update(self, id_: int, **values) -> SAModel:
         await self.session.execute(
             update(self.model).filter_by(id=id_).values(**values),
         )
         await self.session.commit()
 
-        return await self.get_one(id)
+        return await self.get_one(id_)
 
     async def delete(self, id_: int) -> None:
-        await self.get_one(id_)
-
         await self.session.execute(
             update(self.model).filter_by(id=id_).values(deleted_at=func.now()),
         )
