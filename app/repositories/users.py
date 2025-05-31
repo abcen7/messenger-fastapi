@@ -4,11 +4,14 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import with_async_session
+from app.core.lib.repository import BaseRepository
 from app.models import Users
 from app.schemas.users import UserInDB
 
 
-class UsersRepository:
+class UsersRepository(BaseRepository[Users]):
+    model: Users
+
     @with_async_session
     async def get_one(self, user_id: int, session: AsyncSession) -> Users | None:
         query = await session.execute(select(Users).where(Users.id == user_id))

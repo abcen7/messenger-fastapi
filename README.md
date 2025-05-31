@@ -2,6 +2,7 @@ TODO:
 1) Monolith architecture
 2) Redis
 3) Docker
+4) Soft delete for all models
 
 USER FLOWS:
 1) Chat with local person (User -> User):
