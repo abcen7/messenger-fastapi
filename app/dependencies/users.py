@@ -15,7 +15,7 @@ async def validate_auth_user(
     users_repository: Annotated[UsersRepository, Depends()],
 ) -> UserSchema:
     if (
-        user := await users_repository.get_one(
+        user := await users_repository.get_one_or_none(
             users_repository.model.email == user_login.email
         )
     ) is None:
@@ -35,7 +35,9 @@ async def get_user_by_token_sub(
     payload: dict,
     users_repository: UsersRepository,
 ) -> UserSchema:
-    if user := await users_repository.get_one_or_none(int(payload.get("sub"))):
+    if user := await users_repository.get_one(
+        users_repository.model.id == int(payload.get("sub"))
+    ):
         return UserSchema.model_validate(user, from_attributes=True)
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

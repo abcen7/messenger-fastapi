@@ -28,9 +28,9 @@ class BaseRepository(
     @property
     def session(self) -> AsyncSession:
         """
-        Если кто-то обратится к .session раньше, чем декоратор его установит,
-        здесь вылетит RuntimeError. Но в реальности все публичные методы
-        помечены @ensure_session, и тогда session уже точно есть.
+        If someone accesses .session before the decorator sets it,
+        a RuntimeError will be thrown here. But in reality, all public methods
+        are marked with @ensure_session, and then session is definitely there.
         """
         if self._session is None:
             raise RuntimeError("Database session is not initialized.")
@@ -82,38 +82,17 @@ class BaseRepository(
             .filter_by(**filter_by)
         )
         if (result := await self.session.scalar(stmt)) is None:
-            raise EntityNotFoundError(self.model, *where)
+            raise EntityNotFoundError(self.model)
         return result
 
     @provide_session
-    async def get_one_by_id(self, id_: int, *where, **filter_by) -> BaseORMModel:
-        """
-        Returns a record by ID or raises EntityNotFoundError.
-        """
-        stmt = (
-            select(self.model)
-            .where(
-                self.model.id == id_,
-                self.model.deleted_at.is_(None),
-                *where,
-            )
-            .filter_by(**filter_by)
-        )
-        if (result := await self.session.scalar(stmt)) is None:
-            raise EntityNotFoundError(self.model, id_)
-        return result
-
-    @provide_session
-    async def get_one_or_none(
-        self, id_: int, *where, **filter_by
-    ) -> BaseORMModel | None:
+    async def get_one_or_none(self, *where, **filter_by) -> BaseORMModel | None:
         """
         Returns a record by ID or None if not found.
         """
         stmt = (
             select(self.model)
             .where(
-                self.model.id == id_,
                 self.model.deleted_at.is_(None),
                 *where,
             )
@@ -160,7 +139,7 @@ class BaseRepository(
         """
         Updates fields of the record by ID and returns the updated object.
         """
-        if await self.get_by_id_or_none(id_) is None:
+        if await self.get_one_or_none(self.model.id == id_) is None:
             raise EntityNotFoundError(self.model, id_)
 
         stmt = (
@@ -172,15 +151,14 @@ class BaseRepository(
         await self.session.execute(stmt)
         await self.session.commit()
 
-        return await self.get_by_id(id_)
+        return await self.get_one(id_)
 
     @provide_session
     async def delete(self, id_: int) -> None:
         """
         Soft-delete: sets deleted_at to current timestamp.
         """
-        existing = await self.get_by_id_or_none(id_)
-        if existing is None:
+        if await self.get_one_or_none(self.model.id == id_) is None:
             raise EntityNotFoundError(self.model, id_)
 
         stmt = (
@@ -197,8 +175,7 @@ class BaseRepository(
         """
         Permanently deletes the record from the table (hard delete).
         """
-        existing = await self.get_by_id_or_none(id_)
-        if existing is None:
+        if await self.get_one_or_none(self.model.id == id_) is None:
             raise EntityNotFoundError(self.model, id_)
 
         stmt = delete(self.model).where(self.model.id == id_)

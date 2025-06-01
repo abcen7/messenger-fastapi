@@ -13,23 +13,21 @@ class UsersService:
     repository = UsersRepository()
 
     async def create(self, user: UserCreate) -> None:
-        # TODO: fix get_one_or_none here with condition
-        print(await self.repository.get_one(self.repository.model.email == user.email))
         if (
-            await self.repository.get_one(self.repository.model.email == user.email)
+            await self.repository.get_one_or_none(
+                self.repository.model.email == user.email
+            )
             is not None
         ):
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User already exists",
             )
-        user_db_model = Users(
-            **UserInDB(
-                **user.model_dump(),
-                hashed_password=AuthHelper.get_password_hash(user.password),
-            ).model_dump()
+        user_create_dto = UserInDB(
+            **user.model_dump(),
+            hashed_password=AuthHelper.get_password_hash(user.password),
         )
-        await self.repository.create(user_db_model)
+        await self.repository.create(user_create_dto)
 
     async def get_all(self) -> Sequence[Users]:
         return await self.repository.get_all()

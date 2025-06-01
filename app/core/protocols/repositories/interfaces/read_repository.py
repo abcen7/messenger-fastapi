@@ -17,17 +17,8 @@ class IReadRepository(Protocol[BaseORMModel]):
     ) -> BaseORMModel:
         ...
 
-    async def get_one_by_id(
-        self,
-        id_: int,
-        *where,
-        **filter_by,
-    ) -> BaseORMModel:
-        ...
-
     async def get_one_or_none(
         self,
-        id_: int,
         *where,
         **filter_by,
     ) -> BaseORMModel | None:
