@@ -4,12 +4,15 @@ from sqlalchemy import func, select, union_all
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import with_async_session
+from app.core.protocols.repositories import BaseRepository
 from app.models import ChatMember, Chats
 from app.models.chats import ChatType
 from app.schemas.chats import ChatCreate
 
 
-class ChatsRepository:
+class ChatsRepository(BaseRepository[Chats, ChatCreate]):
+    model = Chats
+
     @with_async_session
     async def get_one(
         self,

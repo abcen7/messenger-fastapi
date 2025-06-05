@@ -10,5 +10,4 @@ class MessagesService:
         return await self.repository.get_all(chat_id)
 
     async def create_message(self, message: MessageCreate):
-        message_db = Messages(**message.model_dump())
-        return await self.repository.create(message_db)
+        return await self.repository.create(message)
