@@ -40,21 +40,3 @@ def with_async_session(func):
         return None
 
     return wrapper
-
-
-def provide_session(method):
-    """
-    Decorator: on the first call to any async method
-    "on the fly" gets AsyncSession and puts it in self._session.
-    After that, the original method gets the ready self.session.
-    """
-
-    async def wrapper(self, *args, **kwargs):
-        if self._session is None:
-            async for session in get_async_session():
-                self._session = session
-                break
-
-        return await method(self, *args, **kwargs)
-
-    return wrapper

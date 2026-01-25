@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from pydantic import Field, PostgresDsn, computed_field
 from pydantic_core import MultiHostUrl, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -70,16 +72,12 @@ class ApplicationSettings(BaseSettings):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    db: DatabaseSettings
-    app: ApplicationSettings
+    db: ClassVar[DatabaseSettings] = DatabaseSettings()  # type: ignore
+    app: ClassVar[ApplicationSettings] = ApplicationSettings()  # type: ignore
 
 
 try:
-    settings = Settings(
-        db=DatabaseSettings(),
-        app=ApplicationSettings(),
-    )
-    print(settings.model_dump())
+    settings = Settings()
 except ValidationError as e:
     main_logger.critical("Some environment variables are incorrect.")
     main_logger.critical("Error in .env, validate the app/core/config/settings.py")
