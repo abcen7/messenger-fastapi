@@ -4,11 +4,14 @@ from sqlalchemy import Row, RowMapping, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import with_async_session
+from app.core.repositories import BaseRepository
 from app.models import Messages
-from app.schemas.messages import MessageCreate
+from app.schemas.messages import MessageCreate, MessageInDB
 
 
-class MessagesRepository:
+class MessagesRepository(BaseRepository[Messages, MessageInDB]):
+    _db_model = Messages
+
     @with_async_session
     async def get_all(self, chat_id: int, session: AsyncSession) -> Sequence[Messages]:
         query = await session.execute(

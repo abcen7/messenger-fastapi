@@ -31,7 +31,7 @@ class BaseRepository[
         self,
         session: AsyncSession = Depends(get_async_session),
     ):
-        # If repository was created manually session would be instance of Depends
+        # If repository was created manually then session would be an instance of Depends
         if isinstance(session, DependsParam):  # type: ignore[arg-type]
             raise RepositoryMisuseError(
                 f"{self.__class__.__name__} must be created by FastAPI DI.\n"

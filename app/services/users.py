@@ -14,7 +14,7 @@ class UsersService:
         self._repository = repository
 
     async def create(self, user: UserCreate) -> None:
-        if self._repository.is_user_exists_by_email(user):
+        if self._repository.is_exists_by_email(user):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User already exists",
@@ -29,7 +29,7 @@ class UsersService:
         return await self._repository.get_all()
 
     async def get_one(self, email: str) -> Users:
-        if (user := await self._repository.get_user_by_email(email)) is None:
+        if (user := await self._repository.get_by_email(email)) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found",

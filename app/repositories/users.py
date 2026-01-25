@@ -7,8 +7,8 @@ from app.schemas.users import UserCreate, UserInDB
 class UsersRepository(BaseRepository[Users, UserInDB]):
     _db_model = Users
 
-    async def is_user_exists_by_email(self, user: UserCreate) -> bool:
+    async def is_exists_by_email(self, user: UserCreate) -> bool:
         return self.get_one_or_none(self._db_model.email == user.email) is not None
 
-    async def get_user_by_email(self, email: str) -> Users | None:
+    async def get_by_email(self, email: str) -> Users | None:
         return await self.get_one_or_none(self._db_model.email == email)
