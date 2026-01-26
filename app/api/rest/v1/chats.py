@@ -24,11 +24,14 @@ async def create_chat(
     return await chats_service.create(current_user.id, chat)
 
 
-@router.get("/")
-async def get_all_chats():
-    pass
+@router.get("/", status_code=status.HTTP_200_OK)
+async def get_all_chats(
+    chats_service: Annotated[ChatsService, Depends()],
+    current_user: Annotated[UserSchema, Depends(get_current_auth_user)],
+):
+    return await chats_service.get_all(current_user.id)
 
 
-@router.get("/{chat_id}")
-async def get_chat(chat_id: int):
-    pass
+# @router.get("/{chat_id}")
+# async def get_chat(chat_id: int):
+#     pass

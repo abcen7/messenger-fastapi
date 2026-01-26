@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from fastapi.params import Depends
 from starlette import status
 
+from app.models import Users
 from app.repositories.users import UsersRepository
 from app.schemas.users import UserLogin, UserSchema
 from app.utils.auth import AuthHelper
@@ -15,9 +16,7 @@ async def validate_auth_user(
     users_repository: Annotated[UsersRepository, Depends()],
 ) -> UserSchema:
     if (
-        user := await users_repository.get_one_or_none(
-            users_repository.model.email == user_login.email
-        )
+        user := await users_repository.get_one_or_none(Users.email == user_login.email)
     ) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -35,9 +34,7 @@ async def get_user_by_token_sub(
     payload: dict,
     users_repository: UsersRepository,
 ) -> UserSchema:
-    if user := await users_repository.get_one(
-        users_repository.model.id == int(payload.get("sub"))
-    ):
+    if user := await users_repository.get_one(Users.id == int(payload.get("sub"))):
         return UserSchema.model_validate(user, from_attributes=True)
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

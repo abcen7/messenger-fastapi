@@ -1,15 +1,20 @@
-from typing_extensions import Protocol, runtime_checkable
+from abc import ABC
 
-from .generics_types import DTO, BaseORMModel
+from pydantic import BaseModel
+
+from app.models.base import Base
+
 from .read_repository import IReadRepository
 from .write_repository import IWriteRepository
 
 
-@runtime_checkable
-class IRepository(
+class IRepository[
+    BaseORMModel: Base,
+    DTO: BaseModel,
+](
     IReadRepository[BaseORMModel],
     IWriteRepository[BaseORMModel, DTO],
-    Protocol[BaseORMModel, DTO],
+    ABC,
 ):
     """
     Full interface of repository for read/write operations

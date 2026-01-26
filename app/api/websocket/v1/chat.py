@@ -14,6 +14,7 @@ from app.services.messages import MessagesService
 router = APIRouter()
 
 
+# TODO: refactor
 # TODO: Redis need to be connected
 class ConnectionManager:
     def __init__(self):
@@ -35,7 +36,7 @@ manager = ConnectionManager()
 
 
 @router.websocket(
-    "/ws/{chat_id}",
+    "/{chat_id}",
 )
 async def websocket_chat(
     chat_id: int,
@@ -44,7 +45,6 @@ async def websocket_chat(
     messages_service: Annotated[MessagesService, Depends(MessagesService)],
     user: UserSchema = Depends(get_current_websocket_auth_user),
 ):
-    # TODO: endure out to the ChatService
     if not await chats_service.is_member(chat_id=chat_id, user_id=user.id):
         await websocket.close(
             code=status.WS_1008_POLICY_VIOLATION,
@@ -66,7 +66,7 @@ async def websocket_chat(
                 )
 
                 # Save the message
-                await messages_service.create_message(dto)
+                await messages_service.create(dto)
             except ValidationError:
                 await websocket.close(
                     code=status.WS_1002_PROTOCOL_ERROR,
